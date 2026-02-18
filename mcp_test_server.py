@@ -290,6 +290,9 @@ class ThreadedHTTPServer(HTTPServer):
         """Override to handle exceptions in request handling."""
         try:
             self.RequestHandlerClass(request, client_address, self)
+        except (ConnectionResetError, BrokenPipeError):
+            # Client closed connection - common with health checks, ignore
+            pass
         except Exception as e:
             logger.error(f"Error handling request: {e}")
 

@@ -11,7 +11,7 @@ services:
       - PYTHONUNBUFFERED=1
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "python", "-c", "import http.client; conn = http.client.HTTPConnection('localhost', 3001); conn.request('GET', '/health'); resp = conn.getresponse(); exit(0 if resp.status == 200 else 1)"]
+      test: ["CMD", "sh", "-c", "wget -qO- http://localhost:3001/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3

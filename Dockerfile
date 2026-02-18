@@ -1,13 +1,16 @@
 # MCP Streaming HTTP Test Server Dockerfile
 FROM python:3.13-slim
 
+# Install wget for health check
+RUN apt-get update && apt-get install -y wget && rm -rf /var/lib/apt/lists/*
+
 WORKDIR /app
 
 # Copy server files
 COPY mcp_test_server.py .
 COPY requirements.txt .
 
-# No dependencies to install, but keeping for future extensibility
+# No Python dependencies to install, but keeping for future extensibility
 RUN pip install --no-cache-dir -r requirements.txt || true
 
 # Expose the default port
