@@ -1,0 +1,18 @@
+# MCP Streaming HTTP Test Server - Docker Compose
+version: '3.8'
+
+services:
+  mcp-test-server:
+    build: .
+    container_name: mcp-test-server
+    ports:
+      - "3001:3001"
+    environment:
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import http.client; conn = http.client.HTTPConnection('localhost', 3001); conn.request('GET', '/health'); resp = conn.getresponse(); exit(0 if resp.status == 200 else 1)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 5s
